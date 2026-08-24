@@ -1,4 +1,4 @@
-function    getMenuPrice(menu) {
+function getMenuPrice(menu) {
   switch (menu) {
     case "ข้าวผัด": return 50;
     case "ผัดไทย": return 60;
@@ -28,59 +28,14 @@ const orders = [
 let total = 0;
 
 for (const order of orders) {
-    let price;
 
-    // กำหนดราคาเมนู
-    switch (order.menu) {
-        case "ผัดไทย":
-            price = 50;
-            break;
-
-        case "ข้าวหมูแดง":
-            price = 50;
-            break;
-
-        case "ต้มยำกุ้ง":
-            price = 120;
-            break;
-
-        case "ข้าวผัด":
-            price = 50;
-            break;
-
-        case "ข้าวมันไก่":
-            price = 50;
-            break;
-
-        default:
-            price = 0;
-            console.log(`ไม่พบเมนู: ${order.menu}`);
-    }
-
-    // ตัวคูณขนาด
-    let sizeMultiplier;
-
-    switch (order.size) {
-        case "ธรรมดา":
-            sizeMultiplier = 1;
-            break;
-
-        case "พิเศษ":
-            sizeMultiplier = 1.5;
-            break;
-
-        case "จัมโบ้":
-            sizeMultiplier = 2 ;
-            break;
-
-        default:
-            sizeMultiplier = 1;
-    }
-
-    const itemTotal = price * sizeMultiplier * order.qty;
+    const itemTotal =
+        getMenuPrice(order.menu) *
+        getSizeMultiplier(order.size) *
+        order.qty;
 
     console.log(
-        `${order.menu} (${order.size}) x ${order.qty} = ${itemTotal.toFixed(2)} บาท`
+        `${order.menu} (${order.size}) x${order.qty} = ${itemTotal.toFixed(2)} บาท`
     );
 
     total += itemTotal;
