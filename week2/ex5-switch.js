@@ -30,9 +30,7 @@ let total = 0;
 for (const order of orders) {
 
     const itemTotal =
-        getMenuPrice(order.menu) *
-        getSizeMultiplier(order.size) *
-        order.qty;
+        getMenuPrice(order.menu) * getSizeMultiplier(order.size) * order.qty;
 
     console.log(
         `${order.menu} (${order.size}) x${order.qty} = ${itemTotal.toFixed(2)} บาท`
@@ -42,3 +40,4 @@ for (const order of orders) {
 }
 
 console.log(`ราคารวมทั้งบิล = ${total.toFixed(2)} บาท`);
+
