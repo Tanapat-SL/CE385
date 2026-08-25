@@ -44,4 +44,4 @@ console.log("4.", login("admin", "ce385pass", "อาจารย์", false, 25
 
 console.log("5.", login("admin", "ce385pass", "นักศึกษา", true, 17));
 
-console.log("6.", login("admin", "ce385pass", "นักศึกษา", true, 25)); 
+console.log("6.", login("admin", "ce385pass", "นักศึกษา", true, 25));
