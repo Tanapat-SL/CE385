@@ -1,12 +1,19 @@
 function getMenuPrice(menu) {
-  switch (menu) {
-    case "ข้าวผัด": return 50;
-    case "ผัดไทย": return 60;
-    case "ต้มยำกุ้ง": return 120;
-    case "ข้าวมันไก่": return 50;
-    case "ข้าวหมูแดง": return 50;
-    default:  return 0;
-  }
+    switch (menu) {
+        case "ข้าวผัด":
+        case "ข้าวมันไก่":
+        case "ข้าวหมูแดง":
+            return 50;
+
+        case "ผัดไทย":
+            return 60;
+
+        case "ต้มยำกุ้ง":
+            return 120;
+
+        default:
+            return 0;
+    }
 }
 function getSizeMultiplier(size) {
     switch (size) {
