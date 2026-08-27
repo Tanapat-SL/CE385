@@ -1,4 +1,4 @@
-### 1 ex1-profile
+1 ex1-profile
 สร้างตัวแปร 5 ตัวแปรใช้ const เพราะไม่ต้องการกำหนดค่าใหม่
     const nickname = "ลิฟท์";
     const studentNumber = "67111997";
