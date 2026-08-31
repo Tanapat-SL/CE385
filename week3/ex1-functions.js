@@ -24,7 +24,11 @@ function toGrade(score) {
   ];
   
   const result = gradeScale.find(item => score >= item.minScore);
-  return result ? result.grade : "F";
+    if (result) {
+        return result.grade;
+    } else {
+        return "F";
+}
 }
 function calculateWorkshopScore(raw, full = 60, weight = 20 ) {
     let workshop = (raw / full) * weight;
