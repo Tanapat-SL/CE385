@@ -14,7 +14,7 @@ function getnames(students) {
 
 function getPassedStudents(students) {
     if (students) {
-        return students.filter(student => student.score <= 50).map(student => student.name);
+        return students.filter(student => student.score >= 50).map(student => student.name);
     }
     return [];  
 }
@@ -75,7 +75,7 @@ function getTopStudent(students) {
 
 console.log("คะแนนเฉลี่ยของทั้งหมด:", getAverageScore(students));
 console.log("ชื่อของนักเรียนทั้งหมด:", getnames(students));
-console.log("นักเรียนที่สอบตก:", getPassedStudents(students));
+console.log("นักเรียนที่สอบผ่าน:", getPassedStudents(students));
 console.log("คะแนนรวมของทั้งหมด:", getTotalScore(students));
 console.log("นับจำนวนนักเรียนตามเกรด:", countByGrade(students));
 console.log("นักเรียนที่ได้คะแนนสูงสุด:", getTopStudent(students));
