@@ -1,4 +1,4 @@
 $kind: http-request
-url: ""
-method: GET
+url: http://localhost:3000/api/v1/todos/1
+method: POST
 order: 1789963671655
