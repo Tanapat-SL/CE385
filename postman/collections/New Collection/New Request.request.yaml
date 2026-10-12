@@ -1,4 +1,12 @@
 $kind: http-request
-url: http://localhost:3000/api/v1/todos/1
-method: POST
-order: 1789963671655
+url: http://localhost:3000/products
+method: GET
+body:
+  type: json
+  content: |-
+    {
+      "name": "ติดตั้ง Express",
+      "price": 500,
+      "description": "ทดสอบ Product API"
+    }
+order: 1789979909958
