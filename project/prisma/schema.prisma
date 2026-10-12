@@ -1,0 +1,207 @@
+// Prisma Schema for Gaming Community Database
+// Prisma 5.x + PostgreSQL
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model users {
+  user_id       Int      @id @default(autoincrement())
+  user_name     String   @db.VarChar(30)
+  email         String   @unique @db.VarChar(100)
+  password      String   @db.VarChar(255)
+  profile_image String?  @db.VarChar(255)
+  bio           String?  @db.VarChar(255)
+  status        String   @db.VarChar(20)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+
+  user_games            user_games[]
+  user_ranks            user_ranks[]
+  friendships_requested friendships[] @relation("friendships_requester")
+  friendships_received  friendships[] @relation("friendships_receiver")
+  posts                 posts[]
+  post_comments         post_comments[]
+  chat_members          chat_members[]
+  messages              messages[]
+  blocks_blocker        blocks[]       @relation("blocks_blocker")
+  blocks_blocked        blocks[]       @relation("blocks_blocked")
+  reports_reporter      reports[]      @relation("reports_reporter")
+  reports_reported_user reports[]      @relation("reports_reported_user")
+}
+
+model games {
+  game_id     Int      @id @default(autoincrement())
+  game_name   String   @unique @db.VarChar(100)
+  description String?  @db.Text
+  status      Boolean
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  ranks      ranks[]
+  user_games user_games[]
+  user_ranks user_ranks[]
+  posts      posts[]
+}
+
+model ranks {
+  rank_id    Int      @id @default(autoincrement())
+  game_id    Int
+  rank_name  String   @db.VarChar(50)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+
+  game       games        @relation(fields: [game_id], references: [game_id], onDelete: Cascade)
+  user_ranks user_ranks[]
+  posts      posts[]
+
+  @@unique([game_id, rank_name])
+  @@unique([rank_id, game_id])
+}
+
+model user_games {
+  user_game_id  Int      @id @default(autoincrement())
+  user_id       Int
+  game_id       Int
+  game_username String?  @db.VarChar(50)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+
+  user users @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  game games @relation(fields: [game_id], references: [game_id], onDelete: Cascade)
+
+  @@unique([user_id, game_id])
+}
+
+model user_ranks {
+  user_rank_id Int      @id @default(autoincrement())
+  user_id      Int
+  game_id      Int
+  rank_id      Int?
+  updated_at   DateTime @default(now()) @db.Timestamptz(6)
+
+  user users @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  game games @relation(fields: [game_id], references: [game_id], onDelete: Cascade)
+  rank ranks? @relation(fields: [rank_id, game_id], references: [rank_id, game_id], onDelete: Restrict)
+
+  @@unique([user_id, game_id])
+}
+
+model friendships {
+  friendship_id Int      @id @default(autoincrement())
+  requester_id  Int
+  receiver_id   Int
+  status        String   @db.VarChar(20)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+
+  requester users @relation("friendships_requester", fields: [requester_id], references: [user_id], onDelete: Cascade)
+  receiver  users @relation("friendships_receiver", fields: [receiver_id], references: [user_id], onDelete: Cascade)
+
+  @@unique([requester_id, receiver_id])
+}
+
+model posts {
+  post_id     Int      @id @default(autoincrement())
+  user_id     Int
+  game_id     Int
+  rank_id     Int?
+  title       String   @db.VarChar(100)
+  content     String   @db.Text
+  is_filtered Boolean  @default(false)
+  status      String   @db.VarChar(20)
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  user     users           @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  game     games           @relation(fields: [game_id], references: [game_id], onDelete: Restrict)
+  rank     ranks?          @relation(fields: [rank_id], references: [rank_id], onDelete: SetNull)
+  comments post_comments[]
+  reports  reports[]
+}
+
+model post_comments {
+  comment_id  Int      @id @default(autoincrement())
+  post_id     Int
+  user_id     Int
+  content     String   @db.Text
+  is_filtered Boolean  @default(false)
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  post posts @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
+  user users @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+}
+
+model chat_rooms {
+  room_id    Int      @id @default(autoincrement())
+  room_type  String   @db.VarChar(20)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+
+  chat_members chat_members[]
+  messages     messages[]
+}
+
+model chat_members {
+  room_member_id Int      @id @default(autoincrement())
+  room_id        Int
+  user_id        Int
+  joined_at      DateTime @default(now()) @db.Timestamptz(6)
+
+  room chat_rooms @relation(fields: [room_id], references: [room_id], onDelete: Cascade)
+  user users      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@unique([room_id, user_id])
+}
+
+model messages {
+  message_id  Int      @id @default(autoincrement())
+  room_id     Int
+  sender_id   Int?
+  message     String   @db.Text
+  is_filtered Boolean  @default(false)
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  room    chat_rooms @relation(fields: [room_id], references: [room_id], onDelete: Cascade)
+  sender  users?     @relation(fields: [sender_id], references: [user_id], onDelete: SetNull)
+  reports reports[]
+}
+
+model blocks {
+  block_id   Int      @id @default(autoincrement())
+  blocker_id Int
+  blocked_id Int
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+
+  blocker users @relation("blocks_blocker", fields: [blocker_id], references: [user_id], onDelete: Cascade)
+  blocked users @relation("blocks_blocked", fields: [blocked_id], references: [user_id], onDelete: Cascade)
+
+  @@unique([blocker_id, blocked_id])
+}
+
+model reports {
+  report_id        Int      @id @default(autoincrement())
+  reporter_id      Int?
+  reported_user_id Int?
+  post_id          Int?
+  message_id       Int?
+  reason           String   @db.Text
+  description      String?  @db.Text
+  status           String   @db.VarChar(20)
+  created_at       DateTime @default(now()) @db.Timestamptz(6)
+
+  reporter      users?    @relation("reports_reporter", fields: [reporter_id], references: [user_id], onDelete: SetNull)
+  reported_user users?    @relation("reports_reported_user", fields: [reported_user_id], references: [user_id], onDelete: SetNull)
+  post          posts?    @relation(fields: [post_id], references: [post_id], onDelete: SetNull)
+  message       messages? @relation(fields: [message_id], references: [message_id], onDelete: SetNull)
+}
+
+model banned_words {
+  banned_word_id Int      @id @default(autoincrement())
+  word           String   @unique @db.VarChar(100)
+  severity       Int
+  status         Boolean
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+}
