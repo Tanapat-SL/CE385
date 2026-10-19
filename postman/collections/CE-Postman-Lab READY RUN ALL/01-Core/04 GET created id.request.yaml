@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{base_url}}/posts/{{created_post_id}}"
+method: GET
+headers:
+  User-Agent: PostmanRuntime/7.44.0
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Unknown resource returns 404", () => {
+        pm.response.to.have.status(404);
+      });
+    language: text/javascript
+order: 4000

@@ -1,0 +1,32 @@
+$kind: http-request
+url: "{{echo_url}}/post"
+method: POST
+headers:
+  Content-Type: application/json
+  User-Agent: PostmanRuntime/7.44.0
+body:
+  type: json
+  content: |-
+    {
+      "runId": "{{run_id}}",
+      "student": "CE-demo"
+    }
+auth:
+  type: noauth
+scripts:
+  - type: beforeRequest
+    code: |-
+      pm.variables.set("run_id", pm.variables.replaceIn("{{$guid}}"));
+      console.log("run_id:", pm.variables.get("run_id"));
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      pm.test("Status is 200", () => {
+        pm.response.to.have.status(200);
+      });
+      pm.test("Echo returns generated run id", () => {
+        const data = pm.response.json();
+        pm.expect(data.json.runId).to.eql(pm.variables.get("run_id"));
+      });
+    language: text/javascript
+order: 1000

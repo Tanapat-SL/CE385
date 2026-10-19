@@ -1,0 +1,16 @@
+$kind: http-request
+url: "{{base_url}}/posts/1"
+method: GET
+headers:
+  User-Agent: PostmanRuntime/7.44.0
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Original post still exists after simulated DELETE", () => {
+        pm.response.to.have.status(200);
+        pm.expect(pm.response.json().id).to.eql(1);
+      });
+    language: text/javascript
+order: 9000

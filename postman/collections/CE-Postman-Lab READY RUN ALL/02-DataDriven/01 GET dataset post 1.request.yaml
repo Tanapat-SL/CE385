@@ -1,0 +1,31 @@
+$kind: http-request
+description: GET /posts/1, expected HTTP 200. Run all collection with 1 iteration.
+url: "{{base_url}}/posts/{{post_id}}"
+method: GET
+headers:
+  User-Agent: PostmanRuntime/7.44.0
+auth:
+  type: noauth
+scripts:
+  - type: beforeRequest
+    code: |-
+      pm.variables.set("post_id", 1);
+      pm.variables.set("expected_status", 200);
+      console.log("Case 1: post_id=1, expected_status=200");
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      const expected = Number(pm.variables.get("expected_status"));
+      const id = Number(pm.variables.get("post_id"));
+
+      pm.test("Status matches dataset", () => {
+          pm.expect(pm.response.code).to.eql(expected);
+      });
+
+      if (expected === 200) {
+          pm.test("Response id matches dataset", () => {
+              pm.expect(pm.response.json().id).to.eql(id);
+          });
+      }
+    language: text/javascript
+order: 1000

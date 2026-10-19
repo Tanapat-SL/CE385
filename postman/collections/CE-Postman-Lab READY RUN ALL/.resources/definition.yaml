@@ -1,0 +1,43 @@
+$kind: collection
+description: |-
+  แล็บ Postman สำหรับนักศึกษา ป.ตรี วิศวกรรมคอมพิวเตอร์
+  พร้อมรันทั้งชุด: Import ไฟล์นี้ไฟล์เดียว เลือก Collection > Run เลือกครบทุก request
+  Iterations=1, Delay=500 ms, Environment=No environment, ไม่เลือก Data file
+  17 requests, 30 tests: Core 11/20, DataDriven 3/5, Extension 3/5
+  API สาธารณะฟรี ต้องเชื่อมต่ออินเทอร์เน็ต JSONPlaceholder จำลองการเขียนข้อมูล
+  Collection Pre-request กำหนด base_url, echo_url และ user_id ให้พร้อมใช้
+  ชุดนี้มี 3 data requests เพื่อรันทุกกรณีในรอบเดียว ชุดบทฝึก instructor แยกต่างหากยังใช้ pm.info.iteration และ 3 iterations
+variables:
+  - key: base_url
+    value: https://jsonplaceholder.typicode.com
+    disabled: false
+    secret: false
+  - key: echo_url
+    value: https://postman-echo.com
+    disabled: false
+    secret: false
+  - key: user_id
+    value: "1"
+    disabled: false
+    secret: false
+  - key: post_id
+    value: "1"
+    disabled: false
+    secret: false
+  - key: existing_post_id
+    value: "1"
+    disabled: false
+    secret: false
+  - key: auth_password_0p46
+    secret: true
+    disabled: false
+  - key: created_post_id
+    value: ""
+    disabled: false
+scripts:
+  - type: http:beforeRequest
+    code: |-
+      pm.variables.set("base_url", "https://jsonplaceholder.typicode.com");
+      pm.variables.set("echo_url", "https://postman-echo.com");
+      pm.variables.set("user_id", "1");
+    language: text/javascript

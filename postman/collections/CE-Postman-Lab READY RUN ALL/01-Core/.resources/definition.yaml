@@ -1,0 +1,6 @@
+$kind: collection
+scripts:
+  - type: http:beforeRequest
+    code: pm.variables.set("post_id", "1");
+    language: text/javascript
+order: 1000

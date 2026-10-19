@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{base_url}}/posts/1"
+method: GET
+headers:
+  User-Agent: PostmanRuntime/7.44.0
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status is 200", () => {
+        pm.response.to.have.status(200);
+      });
+      pm.test("Capture an existing post id", () => {
+        const data = pm.response.json();
+        pm.expect(data.id).to.eql(1);
+        pm.collectionVariables.set("existing_post_id", data.id);
+      });
+    language: text/javascript
+order: 10000

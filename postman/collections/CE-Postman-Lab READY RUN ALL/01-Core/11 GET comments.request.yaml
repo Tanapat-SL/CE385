@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{base_url}}/posts/{{existing_post_id}}/comments"
+method: GET
+headers:
+  User-Agent: PostmanRuntime/7.44.0
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status is 200", () => {
+        pm.response.to.have.status(200);
+      });
+      pm.test("Comments belong to captured post", () => {
+        const data = pm.response.json();
+        const id = Number(pm.collectionVariables.get("existing_post_id"));
+        pm.expect(data).to.be.an("array").that.is.not.empty;
+        data.forEach(comment => pm.expect(comment.postId).to.eql(id));
+      });
+    language: text/javascript
+order: 11000

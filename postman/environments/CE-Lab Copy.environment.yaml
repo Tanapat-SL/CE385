@@ -1,0 +1,8 @@
+name: CE-Lab Copy
+values:
+  - key: base_url
+    value: 'https://jsonplaceholder.typicode.com'
+  - key: echo_url
+    value: 'https://postman-echo.com'
+  - key: user_id
+    value: '1'
